@@ -1,9 +1,4 @@
 #!/bin/bash
-# =============================================================================
-# OptiArk - Smart Pack Upgrader
-# Usage: ./upgrade-pack.sh <pack-folder> <new-mc-version>
-# Example: ./upgrade-pack.sh sodium 1.21.10
-# =============================================================================
 
 set -euo pipefail
 
@@ -20,7 +15,6 @@ if [[ ! -d "$PACK" ]]; then
   exit 1
 fi
 
-# ── Config ────────────────────────────────────────────────────────────────────
 NEW_DIR="${PACK}-${NEW_VERSION}"
 MODRINTH_API="https://api.modrinth.com/v2"
 USER_AGENT="OptiArk-Upgrader/1.0"
