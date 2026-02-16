@@ -1,327 +1,122 @@
-#!/bin/bash
-# =============================================================================
-# OptiArk - Smart Pack Upgrader
-# Usage: ./upgrade-pack.sh <pack-folder> <new-mc-version>
-# Example: ./upgrade-pack.sh sodium 1.21.10
-# =============================================================================
+name: Build & Release OptiArk Packs
 
-set -euo pipefail
+# Triggers when you push a tag like v1.0.0
+# To release: git tag v1.0.0 && git push origin v1.0.0
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Release version tag (e.g. v1.0.0)"
+        required: true
+        default: "v1.0.0"
+      draft:
+        description: "Publish as draft?"
+        required: true
+        type: boolean
+        default: false
 
-PACK="${1:-}"
-NEW_VERSION="${2:-}"
+# This is all the permission needed — no personal token required.
+# See one-time setup instructions at the bottom of this file.
+permissions:
+  contents: write
 
-if [[ -z "$PACK" || -z "$NEW_VERSION" ]]; then
-  echo "Usage: ./upgrade-pack.sh <pack-folder> <new-mc-version>"
-  exit 1
-fi
+jobs:
+  build:
+    runs-on: ubuntu-latest
 
-if [[ ! -d "$PACK" ]]; then
-  echo "ERROR: Pack folder '$PACK' not found."
-  exit 1
-fi
+    steps:
+      # ── 1. Checkout repo ────────────────────────────────────────────────────
+      - name: Checkout
+        uses: actions/checkout@v4
 
-# ── Config ────────────────────────────────────────────────────────────────────
-NEW_DIR="${PACK}-${NEW_VERSION}"
-MODRINTH_API="https://api.modrinth.com/v2"
-USER_AGENT="OptiArk-Upgrader/1.0"
-LOG_FILE="upgrade-${PACK}-${NEW_VERSION}.log"
+      # ── 2. Install Go ────────────────────────────────────────────────────────
+      - name: Install Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "stable"
 
-RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[1;33m'
-BLUE='\033[0;34m'; BOLD='\033[1m'; NC='\033[0m'
+      # ── 3. Install packwiz ───────────────────────────────────────────────────
+      - name: Install packwiz
+        run: go install github.com/packwiz/packwiz@latest
 
-UPDATED=(); SKIPPED_GITHUB=(); FAILED=()
+      # ── 4. Build all packs ───────────────────────────────────────────────────
+      # Looks for every folder containing a pack.toml and exports it.
+      # This automatically picks up sodium/, nvidium/, vulkanmod/ and any
+      # future packs you add — no changes to this file needed.
+      - name: Build all .mrpack files
+        run: |
+          mkdir -p releases
 
-log()     { echo -e "$*" | tee -a "$LOG_FILE"; }
-info()    { log "${BLUE}[INFO]${NC}  $*"; }
-ok()      { log "${GREEN}[OK]${NC}    $*"; }
-warn()    { log "${YELLOW}[WARN]${NC}  $*"; }
-fail()    { log "${RED}[FAIL]${NC}  $*"; }
-section() { log "\n${BOLD}═══ $* ═══${NC}"; }
+          for PACK_DIR in */; do
+            # Skip if there's no pack.toml (not a packwiz pack)
+            if [[ ! -f "${PACK_DIR}pack.toml" ]]; then
+              continue
+            fi
 
-for tool in curl python3 sed grep; do
-  if ! command -v "$tool" &>/dev/null; then
-    echo "ERROR: '$tool' is required. Install it first."
-    exit 1
-  fi
-done
+            PACK_NAME=$(basename "$PACK_DIR")
+            MC_VERSION=$(grep -oP '(?<=minecraft-version = ")[^"]+' "${PACK_DIR}pack.toml" \
+              || grep -oP '(?<=minecraft = ")[^"]+' "${PACK_DIR}pack.toml" \
+              || echo "unknown")
 
-# ── JSON via python3 (no jq needed) ──────────────────────────────────────────
-pick_best_version() {
-  python3 - "$1" <<'PYEOF'
-import sys, json
+            echo "==> Building $PACK_NAME (MC $MC_VERSION)..."
 
-data = json.loads(sys.argv[1])
-if not data:
-    sys.exit(1)
+            cd "$PACK_DIR"
+            packwiz refresh
+            packwiz modrinth export -o "../releases/OptiArk-${PACK_NAME}-${MC_VERSION}.mrpack"
+            cd ..
 
-priority = {'release': 0, 'beta': 1, 'alpha': 2}
-data.sort(key=lambda v: priority.get(v.get('version_type', 'alpha'), 3))
-v = data[0]
+            echo "    Built: OptiArk-${PACK_NAME}-${MC_VERSION}.mrpack"
+          done
 
-files = v.get('files', [])
-primary = next((f for f in files if f.get('primary')), files[0] if files else None)
-if not primary:
-    sys.exit(1)
+          echo ""
+          echo "Built files:"
+          ls -lh releases/
 
-print(json.dumps({
-    'version_id':     v.get('id', ''),
-    'version_number': v.get('version_number', ''),
-    'version_type':   v.get('version_type', ''),
-    'filename':       primary.get('filename', ''),
-    'url':            primary.get('url', ''),
-    'sha512':         primary.get('hashes', {}).get('sha512', ''),
-    'sha1':           primary.get('hashes', {}).get('sha1', ''),
-}))
-PYEOF
-}
+      # ── 5. Resolve release tag ───────────────────────────────────────────────
+      # Works out what to call the release regardless of how the action fired
+      - name: Resolve release tag
+        id: tag
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "value=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
+          else
+            echo "value=${{ github.ref_name }}" >> $GITHUB_OUTPUT
+          fi
 
-extract_field() {
-  python3 -c "import sys,json; d=json.loads(sys.argv[1]); print(d.get(sys.argv[2],''))" "$1" "$2" 2>/dev/null || echo ""
-}
+      # ── 6. Generate release notes ────────────────────────────────────────────
+      - name: Generate release notes
+        run: |
+          TAG="${{ steps.tag.outputs.value }}"
+          DATE=$(date +"%Y-%m-%d")
 
-# ── Modrinth query ────────────────────────────────────────────────────────────
-# THE FIX: use --globoff so curl doesn't treat [ ] as globs,
-# and percent-encode the brackets: [ = %5B  ] = %5D
-query_modrinth() {
-  local MOD_ID="$1" MC_VER="$2" LOADER="$3"
+          echo "## OptiArk ${TAG} — ${DATE}" > releases/RELEASE_NOTES.md
+          echo "" >> releases/RELEASE_NOTES.md
+          echo "### Included Packs" >> releases/RELEASE_NOTES.md
 
-  # With loader filter
-  local RESP
-  RESP=$(curl -sf --globoff \
-    -H "User-Agent: $USER_AGENT" \
-    "${MODRINTH_API}/project/${MOD_ID}/version?game_versions=%5B%22${MC_VER}%22%5D&loaders=%5B%22${LOADER}%22%5D" \
-    2>/dev/null || echo "[]")
+          for MRPACK in releases/*.mrpack; do
+            FILENAME=$(basename "$MRPACK")
+            echo "- \`${FILENAME}\`" >> releases/RELEASE_NOTES.md
+          done
 
-  # Fallback: without loader filter (some mods use "minecraft" as loader type)
-  if [[ "$RESP" == "[]" || -z "$RESP" ]]; then
-    RESP=$(curl -sf --globoff \
-      -H "User-Agent: $USER_AGENT" \
-      "${MODRINTH_API}/project/${MOD_ID}/version?game_versions=%5B%22${MC_VER}%22%5D" \
-      2>/dev/null || echo "[]")
-  fi
+          echo "" >> releases/RELEASE_NOTES.md
+          echo "### Installing" >> releases/RELEASE_NOTES.md
+          echo "Download the .mrpack for your preferred renderer and import it into:" >> releases/RELEASE_NOTES.md
+          echo "- **Prism Launcher** → Add Instance → Import from zip" >> releases/RELEASE_NOTES.md
+          echo "- **Modrinth App** → Browse → Import" >> releases/RELEASE_NOTES.md
 
-  echo "$RESP"
-}
+          cat releases/RELEASE_NOTES.md
 
-# ── STEP 1: Validate version exists on Modrinth ───────────────────────────────
-section "VALIDATING VERSION"
-info "Checking '$NEW_VERSION' against Modrinth's version list..."
-
-VERSION_LIST=$(curl -sf --globoff \
-  -H "User-Agent: $USER_AGENT" \
-  "${MODRINTH_API}/tag/game_version" 2>/dev/null || echo "[]")
-
-CHECK=$(python3 - "$VERSION_LIST" "$NEW_VERSION" <<'PYEOF'
-import sys, json
-data = json.loads(sys.argv[1])
-all_versions = [v['version'] for v in data if v.get('version_type') == 'release']
-target = sys.argv[2]
-if target in all_versions:
-    print("yes")
-else:
-    print("no")
-    nearby = sorted([v for v in all_versions if '1.21' in v])
-    print("Valid 1.21.x versions on Modrinth:")
-    print("  " + "  ".join(nearby))
-PYEOF
-)
-
-if echo "$CHECK" | grep -q "^no"; then
-  fail "'$NEW_VERSION' is NOT a valid Modrinth release version."
-  echo "$CHECK" | tail -n +2
-  echo ""
-  echo "Re-run with a correct version from the list above."
-  exit 1
-fi
-ok "'$NEW_VERSION' confirmed as valid Modrinth version."
-
-# ── STEP 2: Copy pack ─────────────────────────────────────────────────────────
-section "SETUP"
-echo "OptiArk Upgrade Log — $PACK → $NEW_VERSION — $(date)" > "$LOG_FILE"
-
-if [[ -d "$NEW_DIR" ]]; then
-  warn "Folder '$NEW_DIR' already exists. Overwrite? [y/N]"
-  read -r CONFIRM
-  [[ "$CONFIRM" != "y" && "$CONFIRM" != "Y" ]] && { echo "Aborted."; exit 0; }
-  rm -rf "$NEW_DIR"
-fi
-
-info "Copying $PACK → $NEW_DIR (configs preserved)..."
-cp -r "$PACK" "$NEW_DIR"
-
-# ── STEP 3: Read + update pack.toml ──────────────────────────────────────────
-section "READING PACK METADATA"
-PACK_TOML="$NEW_DIR/pack.toml"
-
-OLD_VERSION=$(grep -oP '(?<=minecraft-version = ")[^"]+' "$PACK_TOML" 2>/dev/null \
-  || grep -oP '(?<=minecraft = ")[^"]+' "$PACK_TOML" 2>/dev/null \
-  || echo "")
-
-LOADER=$(grep -oiP 'fabric|quilt|neoforge|forge' "$PACK_TOML" \
-  | head -1 | tr '[:upper:]' '[:lower:]' || echo "fabric")
-
-info "Pack:        $PACK"
-info "Old version: $OLD_VERSION"
-info "New version: $NEW_VERSION"
-info "Loader:      $LOADER"
-
-[[ -n "$OLD_VERSION" ]] && sed -i "s/$OLD_VERSION/$NEW_VERSION/g" "$PACK_TOML"
-ok "pack.toml updated → $NEW_VERSION"
-
-# ── STEP 4: Update mods ───────────────────────────────────────────────────────
-section "SCANNING MODS"
-MODS_DIR="$NEW_DIR/mods"
-DISABLED_DIR="$NEW_DIR/mods-disabled"
-mkdir -p "$DISABLED_DIR"
-
-mapfile -t MOD_FILES < <(find "$MODS_DIR" -name "*.pw.toml" 2>/dev/null | sort)
-TOTAL=${#MOD_FILES[@]}
-info "Found $TOTAL mod(s) to process."
-
-section "UPDATING MODS"
-
-for MOD_FILE in "${MOD_FILES[@]}"; do
-  MOD_NAME=$(grep -oP '(?<=^name = ")[^"]+' "$MOD_FILE" 2>/dev/null || echo "$(basename "$MOD_FILE" .pw.toml)")
-  CURRENT_URL=$(grep -oP '(?<=^url = ")[^"]+' "$MOD_FILE" 2>/dev/null | head -1 || echo "")
-
-  # Skip GitHub-sourced mods
-  if echo "$CURRENT_URL" | grep -qP "github\.com|raw\.githubusercontent\.com"; then
-    warn "$MOD_NAME — GitHub source, skipping (update manually)"
-    SKIPPED_GITHUB+=("$MOD_NAME")
-    continue
-  fi
-
-  # Get Modrinth mod ID
-  MOD_ID=$(grep -A5 '\[update\.modrinth\]' "$MOD_FILE" \
-    | grep -oP '(?<=mod-id = ")[^"]+' | head -1 || echo "")
-
-  if [[ -z "$MOD_ID" ]]; then
-    warn "$MOD_NAME — No Modrinth ID in toml, skipping"
-    continue
-  fi
-
-  info "Checking $MOD_NAME ($MOD_ID)..."
-
-  API_RESP=$(query_modrinth "$MOD_ID" "$NEW_VERSION" "$LOADER")
-
-  if [[ "$API_RESP" == "[]" || -z "$API_RESP" ]]; then
-    fail "$MOD_NAME — Not available for MC $NEW_VERSION on $LOADER"
-    mv "$MOD_FILE" "$DISABLED_DIR/"
-    warn "  → moved to mods-disabled/"
-    FAILED+=("$MOD_NAME")
-    continue
-  fi
-
-  BEST=$(pick_best_version "$API_RESP" || echo "")
-  if [[ -z "$BEST" ]]; then
-    fail "$MOD_NAME — Could not parse API response"
-    FAILED+=("$MOD_NAME (parse error)")
-    continue
-  fi
-
-  VERSION_ID=$(extract_field "$BEST" "version_id")
-  VERSION_NUM=$(extract_field "$BEST" "version_number")
-  VERSION_TYPE=$(extract_field "$BEST" "version_type")
-  NEW_FILENAME=$(extract_field "$BEST" "filename")
-  NEW_URL=$(extract_field "$BEST" "url")
-  NEW_SHA512=$(extract_field "$BEST" "sha512")
-  NEW_SHA1=$(extract_field "$BEST" "sha1")
-
-  if [[ -n "$NEW_SHA512" ]]; then
-    HASH_FORMAT="sha512"; NEW_HASH="$NEW_SHA512"
-  else
-    HASH_FORMAT="sha1";   NEW_HASH="$NEW_SHA1"
-  fi
-
-  # Rewrite toml fields
-  sed -i "s|^filename = .*|filename = \"$NEW_FILENAME\"|"   "$MOD_FILE"
-  sed -i "s|^url = .*|url = \"$NEW_URL\"|"                   "$MOD_FILE"
-  sed -i "s|^hash-format = .*|hash-format = \"$HASH_FORMAT\"|" "$MOD_FILE"
-  sed -i "s|^hash = .*|hash = \"$NEW_HASH\"|"               "$MOD_FILE"
-
-  # Update version ID inside [update.modrinth] block only
-  python3 - "$MOD_FILE" "$VERSION_ID" <<'PYEOF'
-import sys, re
-path, new_ver = sys.argv[1], sys.argv[2]
-with open(path) as f:
-    content = f.read()
-# Replace version = "..." that appears after [update.modrinth]
-content = re.sub(
-    r'(\[update\.modrinth\][\s\S]*?version\s*=\s*")[^"]+(")',
-    r'\g<1>' + new_ver + r'\2',
-    content
-)
-with open(path, 'w') as f:
-    f.write(content)
-PYEOF
-
-  TYPE_LABEL=""
-  [[ "$VERSION_TYPE" != "release" ]] && TYPE_LABEL=" ${YELLOW}[$VERSION_TYPE]${NC}"
-  ok "$MOD_NAME → $VERSION_NUM$TYPE_LABEL"
-  UPDATED+=("$MOD_NAME → $VERSION_NUM")
-
-  sleep 0.2  # Stay well under Modrinth's 300 req/min rate limit
-done
-
-# ── STEP 5: Update Fabric loader version ──────────────────────────────────────
-section "UPDATING LOADER VERSION"
-info "Fetching latest $LOADER loader for MC $NEW_VERSION..."
-
-if [[ "$LOADER" == "fabric" ]]; then
-  LOADER_RESP=$(curl -sf --globoff \
-    -H "User-Agent: $USER_AGENT" \
-    "https://meta.fabricmc.net/v2/versions/loader/$NEW_VERSION" \
-    2>/dev/null || echo "[]")
-
-  NEW_LOADER=$(python3 -c "
-import sys, json
-data = json.loads(sys.argv[1])
-print(data[0]['loader']['version'] if data else '')
-" "$LOADER_RESP" 2>/dev/null || echo "")
-
-  if [[ -n "$NEW_LOADER" ]]; then
-    sed -i "s/^fabric = .*/fabric = \"$NEW_LOADER\"/" "$PACK_TOML"
-    ok "Fabric loader → $NEW_LOADER"
-  else
-    warn "Could not fetch Fabric loader version, leaving as-is"
-  fi
-fi
-
-# ── STEP 6: Refresh packwiz index ────────────────────────────────────────────
-section "REFRESHING INDEX"
-if command -v packwiz &>/dev/null; then
-  cd "$NEW_DIR"
-  packwiz refresh 2>&1 | tee -a "../$LOG_FILE"
-  cd ..
-  ok "packwiz index refreshed"
-else
-  warn "packwiz not in PATH — run 'packwiz refresh' manually in $NEW_DIR/"
-fi
-
-# ── STEP 7: Summary ───────────────────────────────────────────────────────────
-section "UPGRADE SUMMARY"
-
-log ""
-log "${GREEN}${BOLD}✔ Updated (${#UPDATED[@]}/${TOTAL}):${NC}"
-for m in "${UPDATED[@]}"; do log "  ${GREEN}✔${NC} $m"; done
-
-if [[ ${#SKIPPED_GITHUB[@]} -gt 0 ]]; then
-  log ""
-  log "${YELLOW}${BOLD}⚠ GitHub mods — update manually (${#SKIPPED_GITHUB[@]}):${NC}"
-  for m in "${SKIPPED_GITHUB[@]}"; do log "  ${YELLOW}⚠${NC} $m"; done
-fi
-
-if [[ ${#FAILED[@]} -gt 0 ]]; then
-  log ""
-  log "${RED}${BOLD}✘ Not available for MC $NEW_VERSION — disabled (${#FAILED[@]}):${NC}"
-  for m in "${FAILED[@]}"; do log "  ${RED}✘${NC} $m"; done
-  log ""
-  log "  Re-enable when updated:"
-  log "  ${BLUE}mv $NEW_DIR/mods-disabled/<mod>.pw.toml $NEW_DIR/mods/${NC}"
-fi
-
-log ""
-log "${BOLD}Pack folder:${NC} $NEW_DIR"
-log "${BOLD}Log saved:${NC}   $LOG_FILE"
-log ""
-log "Next: cd $NEW_DIR && packwiz modrinth export"
+      # ── 7. Publish GitHub Release ────────────────────────────────────────────
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.tag.outputs.value }}
+          name: "OptiArk ${{ steps.tag.outputs.value }}"
+          body_path: releases/RELEASE_NOTES.md
+          files: releases/*.mrpack
+          draft: ${{ github.event.inputs.draft || false }}
+          prerelease: false
+          token: ${{ secrets.GITHUB_TOKEN }}
