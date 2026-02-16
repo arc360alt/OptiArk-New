@@ -1,0 +1,13 @@
+name = "Modpack Utils"
+filename = "ModpackUtils-1.2.0+fabric.1.21.5.jar"
+side = "both"
+
+[download]
+url = "https://cdn.modrinth.com/data/wklFEiuR/versions/9I05imCM/ModpackUtils-1.2.0%2Bfabric.1.21.5.jar"
+hash-format = "sha512"
+hash = "1f0f95363e48925ab6b2f4e1c01e95d70329575a1a139491c5a9758e25d96c02811599d4ad3d1e70cd49b42ef45002781bb25175b854f3e91ddf1d93a0e04063"
+
+[update]
+[update.modrinth]
+mod-id = "wklFEiuR"
+version = "9I05imCM"

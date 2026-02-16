@@ -1,0 +1,102 @@
+name: Build & Release OptiArk Packs
+
+# Triggers when you push a tag like v1.0.0
+# To release: git tag v1.0.0 && git push origin v1.0.0
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # ── 1. Checkout repo ────────────────────────────────────────────────────
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # ── 2. Install Go ────────────────────────────────────────────────────────
+      - name: Install Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "stable"
+
+      # ── 3. Install packwiz ───────────────────────────────────────────────────
+      - name: Install packwiz
+        run: go install github.com/packwiz/packwiz@latest
+
+      # ── 4. Build all packs ───────────────────────────────────────────────────
+      # Looks for every folder containing a pack.toml and exports it.
+      # This automatically picks up sodium/, nvidium/, vulkanmod/ and any
+      # future packs you add — no changes to this file needed.
+      - name: Build all .mrpack files
+        run: |
+          mkdir -p releases
+
+          for PACK_DIR in */; do
+            # Skip if there's no pack.toml (not a packwiz pack)
+            if [[ ! -f "${PACK_DIR}pack.toml" ]]; then
+              continue
+            fi
+
+            PACK_NAME=$(basename "$PACK_DIR")
+            MC_VERSION=$(grep -oP '(?<=minecraft-version = ")[^"]+' "${PACK_DIR}pack.toml" \
+              || grep -oP '(?<=minecraft = ")[^"]+' "${PACK_DIR}pack.toml" \
+              || echo "unknown")
+
+            echo "==> Building $PACK_NAME (MC $MC_VERSION)..."
+
+            cd "$PACK_DIR"
+            packwiz refresh
+            packwiz modrinth export -o "../releases/OptiArk-${PACK_NAME}-${MC_VERSION}.mrpack"
+            cd ..
+
+            echo "    Built: OptiArk-${PACK_NAME}-${MC_VERSION}.mrpack"
+          done
+
+          echo ""
+          echo "Built files:"
+          ls -lh releases/
+
+      # ── 5. Generate release notes ────────────────────────────────────────────
+      - name: Generate release notes
+        run: |
+          TAG="${{ github.ref_name }}"
+          DATE=$(date +"%Y-%m-%d")
+
+          echo "## OptiArk ${TAG} — ${DATE}" > releases/RELEASE_NOTES.md
+          echo "" >> releases/RELEASE_NOTES.md
+          echo "### Included Packs" >> releases/RELEASE_NOTES.md
+
+          for MRPACK in releases/*.mrpack; do
+            FILENAME=$(basename "$MRPACK")
+            # Extract pack name and MC version from filename
+            # Format: OptiArk-<pack>-<mcversion>.mrpack
+            PACK=$(echo "$FILENAME" | sed 's/OptiArk-//;s/\.mrpack//')
+            echo "- \`${FILENAME}\`" >> releases/RELEASE_NOTES.md
+          done
+
+          echo "" >> releases/RELEASE_NOTES.md
+          echo "### Installing" >> releases/RELEASE_NOTES.md
+          echo "Download the .mrpack for your preferred renderer and import it into:" >> releases/RELEASE_NOTES.md
+          echo "- **Prism Launcher** → Add Instance → Import from zip" >> releases/RELEASE_NOTES.md
+          echo "- **Modrinth App** → Browse → Import" >> releases/RELEASE_NOTES.md
+
+          cat releases/RELEASE_NOTES.md
+
+      # ── 6. Publish GitHub Release ────────────────────────────────────────────
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "OptiArk ${{ github.ref_name }}"
+          body_path: releases/RELEASE_NOTES.md
+          files: releases/*.mrpack
+          # Remove 'draft: true' below when you're ready for public releases.
+          # While draft is true, releases are saved but not visible publicly.
+          draft: false
+          prerelease: false
+          token: ${{ secrets.GITHUB_TOKEN }}
