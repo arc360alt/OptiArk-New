@@ -103,20 +103,40 @@ info "Checking '$NEW_VERSION' against Modrinth's version list..."
 
 VERSION_LIST=$(curl -sf --globoff \
   -H "User-Agent: $USER_AGENT" \
-  "${MODRINTH_API}/tag/game_version" 2>/dev/null || echo "[]")
+  "https://modrinth.com/api/tags/game-versions" 2>/dev/null || echo "[]")
 
 CHECK=$(python3 - "$VERSION_LIST" "$NEW_VERSION" <<'PYEOF'
-import sys, json
+import sys, json, re
 data = json.loads(sys.argv[1])
-all_versions = [v['version'] for v in data if v.get('version_type') == 'release']
 target = sys.argv[2]
-if target in all_versions:
+
+# Accept both old (1.x.x) and new (YY.drop.patch) release versions
+all_releases = [v['version'] for v in data if v.get('version_type') == 'release']
+
+if target in all_releases:
     print("yes")
 else:
-    print("no")
-    nearby = sorted([v for v in all_versions if '1.21' in v])
-    print("Valid 1.21.x versions on Modrinth:")
-    print("  " + "  ".join(nearby))
+    # Also check snapshots in case user passed e.g. "26.1-snapshot-7"
+    all_versions = [v['version'] for v in data]
+    if target in all_versions:
+        print("yes")
+    else:
+        print("no")
+        # Guess which era the user is targeting and show nearby versions
+        def is_new_format(v):
+            return bool(re.match(r'^\d{2}\.\d+', v))
+
+        if is_new_format(target):
+            nearby = [v['version'] for v in data if re.match(r'^\d{2}\.\d+', v['version'])]
+        else:
+            # Extract major version prefix e.g. "1.21" from "1.21.4"
+            prefix = '.'.join(target.split('.')[:2])
+            nearby = [v['version'] for v in data if v['version'].startswith(prefix)]
+            if not nearby:
+                nearby = [v['version'] for v in data if v.get('version_type') == 'release'][:10]
+
+        print(f"Valid versions matching your input era:")
+        print("  " + "  ".join(nearby[:15]))
 PYEOF
 )
 
