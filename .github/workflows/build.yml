@@ -6,7 +6,20 @@ on:
   push:
     tags:
       - "v*"
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Release version tag (e.g. v1.0.0)"
+        required: true
+        default: "v1.0.0"
+      draft:
+        description: "Publish as draft?"
+        required: true
+        type: boolean
+        default: false
 
+# This is all the permission needed — no personal token required.
+# See one-time setup instructions at the bottom of this file.
 permissions:
   contents: write
 
@@ -62,10 +75,21 @@ jobs:
           echo "Built files:"
           ls -lh releases/
 
-      # ── 5. Generate release notes ────────────────────────────────────────────
+      # ── 5. Resolve release tag ───────────────────────────────────────────────
+      # Works out what to call the release regardless of how the action fired
+      - name: Resolve release tag
+        id: tag
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "value=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
+          else
+            echo "value=${{ github.ref_name }}" >> $GITHUB_OUTPUT
+          fi
+
+      # ── 6. Generate release notes ────────────────────────────────────────────
       - name: Generate release notes
         run: |
-          TAG="${{ github.ref_name }}"
+          TAG="${{ steps.tag.outputs.value }}"
           DATE=$(date +"%Y-%m-%d")
 
           echo "## OptiArk ${TAG} — ${DATE}" > releases/RELEASE_NOTES.md
@@ -74,9 +98,6 @@ jobs:
 
           for MRPACK in releases/*.mrpack; do
             FILENAME=$(basename "$MRPACK")
-            # Extract pack name and MC version from filename
-            # Format: OptiArk-<pack>-<mcversion>.mrpack
-            PACK=$(echo "$FILENAME" | sed 's/OptiArk-//;s/\.mrpack//')
             echo "- \`${FILENAME}\`" >> releases/RELEASE_NOTES.md
           done
 
@@ -88,15 +109,14 @@ jobs:
 
           cat releases/RELEASE_NOTES.md
 
-      # ── 6. Publish GitHub Release ────────────────────────────────────────────
+      # ── 7. Publish GitHub Release ────────────────────────────────────────────
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          name: "OptiArk ${{ github.ref_name }}"
+          tag_name: ${{ steps.tag.outputs.value }}
+          name: "OptiArk ${{ steps.tag.outputs.value }}"
           body_path: releases/RELEASE_NOTES.md
           files: releases/*.mrpack
-          # Remove 'draft: true' below when you're ready for public releases.
-          # While draft is true, releases are saved but not visible publicly.
-          draft: false
+          draft: ${{ github.event.inputs.draft || false }}
           prerelease: false
           token: ${{ secrets.GITHUB_TOKEN }}
