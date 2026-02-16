@@ -49,6 +49,10 @@ file = "config/mutils/mutils.json5"
 hash = "757de8bccbbe97eb5d8e4ba6990880b52cb71b066fad1c7b2e25cfe79bef44ed"
 
 [[files]]
+file = "config/sodium-extra-options.json"
+hash = "758951a47a3c1b2057c92159cea555b105f0d5f589fc850758e8348305512a50"
+
+[[files]]
 file = "icon.png"
 hash = "b2eeba11d5ff5d6c32bc8d6e1eb6f3268e6e08e1240122d1c7dd918ed71f7f6f"
 
@@ -176,3 +180,23 @@ metafile = true
 file = "mods/yacl.pw.toml"
 hash = "1113d43c39a9866252a83ee50d16aa3ce6fcf749acd84d58b05ca09eba4d187b"
 metafile = true
+
+[[files]]
+file = "options.txt"
+hash = "22bc36590627f9f04d493e53aa593b4b814ba32d5323a51c3c39076163f20096"
+
+[[files]]
+file = "resourcepacks/OptiArk Resources/assets/minecraft/textures/gui/title/edition.png"
+hash = "0459161175b3dbd84c42d8a9c3b35fb6bfbc764b4475ab9d1d31e81a514f3db6"
+
+[[files]]
+file = "resourcepacks/OptiArk Resources/assets/minecraft/textures/gui/title/minecraft.png"
+hash = "9bdc5c88cf9d684eb73c27de55bdc7c9940126e7b6a7e2c7e53554209d15147f"
+
+[[files]]
+file = "resourcepacks/OptiArk Resources/pack.mcmeta"
+hash = "42c0c3db72f7303b589ff4dfdbc0e4ef59439b0bcf512afe6c9358e75bb400b1"
+
+[[files]]
+file = "resourcepacks/OptiArk Resources/pack.png"
+hash = "b2eeba11d5ff5d6c32bc8d6e1eb6f3268e6e08e1240122d1c7dd918ed71f7f6f"

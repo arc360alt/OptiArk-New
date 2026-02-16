@@ -1,12 +1,12 @@
 name = "OptiArk"
 author = "ark"
-version = "1.0.0"
+version = "1.1.0"
 pack-format = "packwiz:1.1.0"
 
 [index]
 file = "index.toml"
 hash-format = "sha256"
-hash = "0ef806f9b6dd2386a67b908373d82bc9ab75d9a639821b137189ab40e1f0ff29"
+hash = "6d5f43ff0928b73fa051bafb75b197ad0f14fc188ded98f168c535a3ab5767e2"
 
 [versions]
 fabric = "0.18.4"

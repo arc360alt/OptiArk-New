@@ -1,12 +1,12 @@
 name = "OptiArk-Vulkan"
 author = "ark"
-version = "1.0.0"
+version = "1.1.0"
 pack-format = "packwiz:1.1.0"
 
 [index]
 file = "index.toml"
 hash-format = "sha256"
-hash = "4fb329c83d8ee68aa468e23606ed3010d121cf3dec3f9767de7540a6139baf95"
+hash = "6f7767f67182de17aeb0a18430aafd2bf0273552ae68e1ab50aa6bfeb5b852fd"
 
 [versions]
 fabric = "0.18.4"

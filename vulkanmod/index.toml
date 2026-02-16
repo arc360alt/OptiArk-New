@@ -49,6 +49,18 @@ file = "config/mutils/mutils.json5"
 hash = "757de8bccbbe97eb5d8e4ba6990880b52cb71b066fad1c7b2e25cfe79bef44ed"
 
 [[files]]
+file = "config/not-enough-vulkan-options.json"
+hash = "08d500e76275780a98fbdd798c67957cd2779bbc5749592dfd1a053ce80c7db2"
+
+[[files]]
+file = "config/not-enough-vulkan.properties"
+hash = "249b20c9e1f9792711c86c08e4eb60ef3741f53d3ed6abb1cb416278b16c6a55"
+
+[[files]]
+file = "config/vulkanmod_settings.json"
+hash = "e6b3e8dfdf104943dbcbcefdb3b4ac3dad1f6c15c32127201e818e9c14f79a30"
+
+[[files]]
 file = "icon.png"
 hash = "d382b2e588d0762820e8cd3518727c718c3be9173eba6246892ed23fcb8cd2c4"
 
@@ -171,3 +183,23 @@ metafile = true
 file = "mods/yacl.pw.toml"
 hash = "1113d43c39a9866252a83ee50d16aa3ce6fcf749acd84d58b05ca09eba4d187b"
 metafile = true
+
+[[files]]
+file = "options.txt"
+hash = "50e615c2328eea67832a0ecdb4466e9d8d9a80c33ecc84107e2240f84c1cb36e"
+
+[[files]]
+file = "resourcepacks/OptiArk Resources/assets/minecraft/textures/gui/title/edition.png"
+hash = "0459161175b3dbd84c42d8a9c3b35fb6bfbc764b4475ab9d1d31e81a514f3db6"
+
+[[files]]
+file = "resourcepacks/OptiArk Resources/assets/minecraft/textures/gui/title/minecraft.png"
+hash = "9bdc5c88cf9d684eb73c27de55bdc7c9940126e7b6a7e2c7e53554209d15147f"
+
+[[files]]
+file = "resourcepacks/OptiArk Resources/pack.mcmeta"
+hash = "42c0c3db72f7303b589ff4dfdbc0e4ef59439b0bcf512afe6c9358e75bb400b1"
+
+[[files]]
+file = "resourcepacks/OptiArk Resources/pack.png"
+hash = "b2eeba11d5ff5d6c32bc8d6e1eb6f3268e6e08e1240122d1c7dd918ed71f7f6f"
