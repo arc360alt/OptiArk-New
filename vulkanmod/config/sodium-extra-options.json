@@ -2,17 +2,17 @@
   "animation_settings": {
     "animation": false,
     "water": false,
-    "lava": true,
-    "fire": true,
-    "portal": true,
+    "lava": false,
+    "fire": false,
+    "portal": false,
     "block_animations": false,
     "sculk_sensor": false
   },
   "particle_settings": {
     "particles": false,
-    "rain_splash": true,
-    "block_break": true,
-    "block_breaking": true,
+    "rain_splash": false,
+    "block_break": false,
+    "block_breaking": false,
     "other": {
       "minecraft:angry_villager": true,
       "minecraft:ash": true,
