@@ -34,11 +34,12 @@ If you feel like a version should be supported for this pack, then use the updat
 - Lithium
 - Main Menu Credits
 - ModMenu
-- Ore Harvester
+- Ore Harvester (Does not work right now for an unknown reason)
 - Placeholder API
 - Sodium Extra
-- Tree Harvester
+- Tree Harvester (Does not work right now for an unknown reason)
 - Very Many Players
 - WI Zoom
 - YACL (Yet Another Config Lib)
+- Apple Skin (coming later)
 ### Huge thanks to all of the creators of these mods for making this pack possible.
