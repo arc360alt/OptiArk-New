@@ -61,6 +61,11 @@ file = "icon.png"
 hash = "30263c67db844b03bd005bb87fdade7f4790db551e2b8d9236d991418f953823"
 
 [[files]]
+file = "mods/better-block-entities.pw.toml"
+hash = "8958a9efde473f0e9ab49069682c66f5c6cbf8023f983a14658c1a325c7273b7"
+metafile = true
+
+[[files]]
 file = "mods/c2me-fabric.pw.toml"
 hash = "a8f073ab0640d9e501fe3fc95d282306000fd6eab3186fd682269c0d0913b307"
 metafile = true
