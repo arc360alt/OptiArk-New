@@ -3,13 +3,13 @@
     "top_left": [],
     "top_right": [],
     "bottom_left": [],
-    "bottom_right": [],
+    "bottom_right": ["OptiArk 26.1"],
     "mod_blacklist": []
   },
   "pause_menu": {
     "top_left": [],
     "top_right": [],
-    "bottom_left": ["OptiArk 1.8"],
+    "bottom_left": ["OptiArk 26.1"],
     "bottom_right": [],
     "mod_blacklist": []
   }

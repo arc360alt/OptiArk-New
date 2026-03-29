@@ -3,3 +3,4 @@
 - Fancymenu and its dependencies (Konkrete, Melody) - Not updated to 26.1 yet
 - Krypton - Not updated to 26.1 Yet.
 - Chunky - Not updated to 26.1 yet.
+## No Vulkanmod Support Yet.
