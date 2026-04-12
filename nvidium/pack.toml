@@ -1,13 +1,13 @@
 name = "OptiArk-Nvidium"
 author = "ark"
-version = "1.3.0"
+version = "1.5.0"
 pack-format = "packwiz:1.1.0"
 
 [index]
 file = "index.toml"
 hash-format = "sha256"
-hash = "d6923eaaf808e3bb358c956ea937318221575177dda2d62ec8371583cfeb9e59"
+hash = "f569306dd2a83e7b2ebd4d85a3372bfc53c9d7623c3b5a6aa11f895c54288ed0"
 
 [versions]
-fabric = "0.18.4"
-minecraft = "1.21.11"
+fabric = "0.19.1"
+minecraft = "26.1.2"
