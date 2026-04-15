@@ -1,0 +1,138 @@
+name: Release Renderer Versions
+
+# Only runs manually via workflow_dispatch.
+# Usage example: choose "vulkanmod", enter "26.1, 26.1.1, 26.1.2"
+# → Builds all 3 versions from their support/* branches and bundles them into one release.
+on:
+  workflow_dispatch:
+    inputs:
+      renderer:
+        description: "Which renderer pack to build?"
+        required: true
+        type: choice
+        options:
+          - vulkanmod
+          - nvidium
+          - sodium
+      versions:
+        description: "Versions to include (comma-separated, e.g. 26.1, 26.1.1, 26.1.2)"
+        required: true
+      release_tag:
+        description: "Release tag (e.g. vulkanmod-v26.1-bundle)"
+        required: true
+      draft:
+        description: "Publish as draft?"
+        required: true
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # ── 1. Install Go ────────────────────────────────────────────────────────
+      - name: Install Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "stable"
+
+      # ── 2. Install packwiz ───────────────────────────────────────────────────
+      - name: Install packwiz
+        run: go install github.com/packwiz/packwiz@latest
+
+      # ── 3. Build each version from its branch ───────────────────────────────
+      # Checks out support/<version> for each version you listed,
+      # finds the renderer folder, and exports the .mrpack.
+      - name: Build all requested versions
+        run: |
+          mkdir -p releases
+
+          RENDERER="${{ github.event.inputs.renderer }}"
+          # Parse comma-separated versions, trimming whitespace around each
+          IFS=',' read -ra RAW_VERSIONS <<< "${{ github.event.inputs.versions }}"
+
+          for RAW_VER in "${RAW_VERSIONS[@]}"; do
+            VERSION="${RAW_VER// /}"   # strip any spaces
+            BRANCH="support/${VERSION}"
+
+            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+            echo "==> Checking out branch: ${BRANCH}"
+
+            # Fetch and checkout this version's branch into a temp folder
+            git clone --depth 1 --branch "${BRANCH}" \
+              "https://github.com/${{ github.repository }}.git" \
+              "checkout_${VERSION}"
+
+            PACK_DIR="checkout_${VERSION}/${RENDERER}/"
+
+            if [[ ! -d "$PACK_DIR" ]]; then
+              echo "ERROR: Renderer folder '${RENDERER}' not found in branch ${BRANCH}. Skipping."
+              continue
+            fi
+
+            if [[ ! -f "${PACK_DIR}pack.toml" ]]; then
+              echo "ERROR: No pack.toml found in ${PACK_DIR}. Skipping."
+              continue
+            fi
+
+            MC_VERSION=$(grep -oP '(?<=minecraft-version = ")[^"]+' "${PACK_DIR}pack.toml" \
+              || grep -oP '(?<=minecraft = ")[^"]+' "${PACK_DIR}pack.toml" \
+              || echo "unknown")
+
+            echo "==> Building ${RENDERER} ${VERSION} (MC ${MC_VERSION})..."
+
+            cd "$PACK_DIR"
+            packwiz refresh
+            packwiz modrinth export \
+              -o "../../releases/OptiArk-${RENDERER}-${VERSION}-MC${MC_VERSION}.mrpack"
+            cd ../..
+
+            echo "    Built: OptiArk-${RENDERER}-${VERSION}-MC${MC_VERSION}.mrpack"
+          done
+
+          echo ""
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo "All built files:"
+          ls -lh releases/*.mrpack 2>/dev/null || echo "(no .mrpack files found — check errors above)"
+
+      # ── 4. Generate release notes ────────────────────────────────────────────
+      - name: Generate release notes
+        run: |
+          RENDERER="${{ github.event.inputs.renderer }}"
+          TAG="${{ github.event.inputs.release_tag }}"
+          DATE=$(date +"%Y-%m-%d")
+
+          echo "## OptiArk — ${RENDERER^} Bundle ${TAG}" > releases/RELEASE_NOTES.md
+          echo "_Released: ${DATE}_" >> releases/RELEASE_NOTES.md
+          echo "" >> releases/RELEASE_NOTES.md
+          echo "### Included Versions" >> releases/RELEASE_NOTES.md
+
+          for MRPACK in releases/*.mrpack; do
+            [[ -f "$MRPACK" ]] || continue
+            FILENAME=$(basename "$MRPACK")
+            echo "- \`${FILENAME}\`" >> releases/RELEASE_NOTES.md
+          done
+
+          echo "" >> releases/RELEASE_NOTES.md
+          echo "### Installing" >> releases/RELEASE_NOTES.md
+          echo "Pick the .mrpack that matches your ${RENDERER^} version and import it into:" >> releases/RELEASE_NOTES.md
+          echo "- **Prism Launcher** → Add Instance → Import from zip" >> releases/RELEASE_NOTES.md
+          echo "- **Modrinth App** → Browse → Import" >> releases/RELEASE_NOTES.md
+
+          cat releases/RELEASE_NOTES.md
+
+      # ── 5. Publish GitHub Release ────────────────────────────────────────────
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.event.inputs.release_tag }}
+          name: "OptiArk ${{ github.event.inputs.renderer }} — ${{ github.event.inputs.release_tag }}"
+          body_path: releases/RELEASE_NOTES.md
+          files: releases/*.mrpack
+          draft: ${{ github.event.inputs.draft }}
+          prerelease: false
+          token: ${{ secrets.GITHUB_TOKEN }}
