@@ -94,7 +94,7 @@ metafile = true
 
 [[files]]
 file = "mods/beryl.pw.toml"
-hash = "91f3bacb371a3526261c68dd80fe95a16d2612265055707539644e6398c6bbf4"
+hash = "87e2dcd7ece25864031268024287baea282cab9892d1c91d337d85b5ee21db0c"
 metafile = true
 
 [[files]]
@@ -184,7 +184,7 @@ metafile = true
 
 [[files]]
 file = "mods/vulkanmod.pw.toml"
-hash = "4a89069a690bb9a603eece950309bf112e8efce2b5a6b0a02aca619a5f053101"
+hash = "8860d96f87a392b1dbb5734eb9ac142f2ba78318b6d88ddadd29eb732da23dea"
 metafile = true
 
 [[files]]
