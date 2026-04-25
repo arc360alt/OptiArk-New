@@ -1,0 +1,13 @@
+name = "Beryl"
+filename = "beryl_26.1.2-0.1.3-alpha.jar"
+side = "client"
+
+[download]
+url = "https://cdn.modrinth.com/data/rYeGeBaO/versions/GzKHtHxz/beryl_26.1.2-0.1.3-alpha.jar"
+hash-format = "sha512"
+hash = "b6e5969d8575cef858b177fe308ae0b089d1379da417048acbb8f77eed3508070c94b2224762218c0265ebd787b795313144c1f3687fa7ce40db85ea6a65e9f9"
+
+[update]
+[update.modrinth]
+mod-id = "rYeGeBaO"
+version = "GzKHtHxz"

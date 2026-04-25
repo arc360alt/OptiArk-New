@@ -101,6 +101,11 @@ hash = "e06e3ad7abc0ffad9b28c0eac8b66e61be642b3a2b687ecc77b9597c94aa70ed"
 metafile = true
 
 [[files]]
+file = "mods/cubes-without-borders.pw.toml"
+hash = "c2f7894f6710a7d6f5579d4272324a7533f83c75c47a2117ac90a7b4b7bfbd19"
+metafile = true
+
+[[files]]
 file = "mods/fabric-api.pw.toml"
 hash = "3fa7042499ca70691864ca28f7e797a489e8be41f7affbdcdbceae794817f72a"
 metafile = true

@@ -5,6 +5,7 @@ The new repo for building OptiArk packs, all old versions that are not 1.21.11 a
 - Ferrite Core
 - Krypton
 - MainMenuCredits
+- Not enough Vulkan (Vulkanmod only)
 
 # Extra Notes:
 If you feel like a version should be supported for this pack, then use the update.sh command to make your own version of the pack, its super simple and usualy works very well, its reccomended the lowest you go is 1.21.4 for the version. The script also tells you what incompatible mods there are too.
@@ -39,10 +40,10 @@ If you feel like a version should be supported for this pack, then use the updat
 - Lithium
 - Main Menu Credits
 - ModMenu
-- Ore Harvester (Does not work right now for an unknown reason)
+- Ore Harvester
 - Placeholder API
 - Sodium Extra
-- Tree Harvester (Does not work right now for an unknown reason)
+- Tree Harvester
 - Very Many Players
 - WI Zoom
 - YACL (Yet Another Config Lib)

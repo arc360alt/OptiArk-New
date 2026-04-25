@@ -1,0 +1,13 @@
+name = "Borderless Windowed Vulkan"
+filename = "BorderlessVulkan-1.0.1+26.1.X.jar"
+side = "client"
+
+[download]
+url = "https://cdn.modrinth.com/data/HwGFylw6/versions/bctAxa9S/BorderlessVulkan-1.0.1%2B26.1.X.jar"
+hash-format = "sha512"
+hash = "ae16bff2b655aa1c2cfae692bc478e9307fdbc45d2928f4c0c9725ab9b7c2d42c2e86eb08239bd61ec1671716678c957adc6ae1c9a0a3203a225fdfde3689388"
+
+[update]
+[update.modrinth]
+mod-id = "HwGFylw6"
+version = "bctAxa9S"

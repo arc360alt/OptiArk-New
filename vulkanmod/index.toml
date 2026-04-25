@@ -88,13 +88,18 @@ hash = "e379dcd9dfc17994be22c8ebd94ddb3e61c5e8498ba9a4f3e79b4e07ae253b43"
 metafile = true
 
 [[files]]
-file = "mods-disabled/mutils.pw.toml"
-hash = "59c8bfd174e912ad557a71b91cf21e7f8bcec9ec93be30218549643c14436f44"
+file = "mods-disabled/not-enough-vulkan.pw.toml"
+hash = "1956264699eacb206997867e019674f18f9858723f956ca48ebbd95c1bd0e1d7"
 metafile = true
 
 [[files]]
-file = "mods-disabled/not-enough-vulkan.pw.toml"
-hash = "1956264699eacb206997867e019674f18f9858723f956ca48ebbd95c1bd0e1d7"
+file = "mods/beryl.pw.toml"
+hash = "91f3bacb371a3526261c68dd80fe95a16d2612265055707539644e6398c6bbf4"
+metafile = true
+
+[[files]]
+file = "mods/borderless-windowed-vulkan.pw.toml"
+hash = "5ca1095d07fbefc617e64ba3aed751581868e0d24464f73f0705963bcbe55009"
 metafile = true
 
 [[files]]
@@ -179,7 +184,7 @@ metafile = true
 
 [[files]]
 file = "mods/vulkanmod.pw.toml"
-hash = "f9569bc71abae3bbab0f1d2a57d932cb07d219981956316c4e5249db831b41e7"
+hash = "4a89069a690bb9a603eece950309bf112e8efce2b5a6b0a02aca619a5f053101"
 metafile = true
 
 [[files]]
