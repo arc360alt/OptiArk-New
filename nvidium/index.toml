@@ -76,11 +76,6 @@ hash = "e379dcd9dfc17994be22c8ebd94ddb3e61c5e8498ba9a4f3e79b4e07ae253b43"
 metafile = true
 
 [[files]]
-file = "mods-disabled/mutils.pw.toml"
-hash = "59c8bfd174e912ad557a71b91cf21e7f8bcec9ec93be30218549643c14436f44"
-metafile = true
-
-[[files]]
 file = "mods/better-block-entities.pw.toml"
 hash = "539695e9725d5bff359c6c930d6e7b4173ced1c30e4ed6f7eedce28d992ea241"
 metafile = true
@@ -112,7 +107,7 @@ metafile = true
 
 [[files]]
 file = "mods/fabric-api.pw.toml"
-hash = "3fa7042499ca70691864ca28f7e797a489e8be41f7affbdcdbceae794817f72a"
+hash = "2a77dc7aade5de6d21315582c4b70db40ff2bdf746b61c10d7ad3c5be8422f75"
 metafile = true
 
 [[files]]
@@ -126,6 +121,11 @@ hash = "210a9c57b8947e0b5778250fc01d6459a1c2313007c115da507859f6d942cd0b"
 metafile = true
 
 [[files]]
+file = "mods/ferrite-core.pw.toml"
+hash = "069d81cab53c0141459ad4d70bcf3e10f17652f24cc62d3b4a0fc2cd2b700871"
+metafile = true
+
+[[files]]
 file = "mods/iris.pw.toml"
 hash = "51fa2c64e9cf2d5558a2f1e575960a0a9f9f27f73486d0d679c2bc695eb11026"
 metafile = true
@@ -133,6 +133,11 @@ metafile = true
 [[files]]
 file = "mods/konkrete.pw.toml"
 hash = "bf4395c4e6c7b996cf2ffef1479c2992c1108a2b3c909b9bf9f9c089e2afe5d3"
+metafile = true
+
+[[files]]
+file = "mods/krypton.pw.toml"
+hash = "d5060b22fa47d5d56e0f4617904731e9d397d1ba104320b7ec8e59f7ca0700a7"
 metafile = true
 
 [[files]]
@@ -151,18 +156,23 @@ hash = "885444f9444eed0b2f71445d795a7a3462c5646edd1940468a791cc46a6626ec"
 metafile = true
 
 [[files]]
+file = "mods/modernfix-mvus.pw.toml"
+hash = "40ea7513ea7b648ad4fc392d549d52d3764ec87ee0b864c42f87e3a67a6356eb"
+metafile = true
+
+[[files]]
 file = "mods/modmenu.pw.toml"
 hash = "a3b2043845ab8f258b02e6cefe35e20f836ccc1e30acd6758fc98a772be87828"
 metafile = true
 
 [[files]]
 file = "mods/nvidium.pw.toml"
-hash = "04c40c16c918b8990487ef81ad23621d40a88c52f0831ef09676d682f9a82459"
+hash = "d465e26dd8cc8cf187e335bb57d05e58148277a4f693b3d51bc35885bc7fefa6"
 metafile = true
 
 [[files]]
 file = "mods/ore-harvester.pw.toml"
-hash = "9a9a4c9cbe05ca494ef129ffe80cea396c25c0c5572ec1807a237fe3e498c9fd"
+hash = "3f0e8d05243f264477495374076d08572564aae94e04140edd014f81a03e503e"
 metafile = true
 
 [[files]]
@@ -182,7 +192,7 @@ metafile = true
 
 [[files]]
 file = "mods/tree-harvester.pw.toml"
-hash = "f89ad84642ee23ce8f94b10424a948008c4d33940723b010f0409f02eb72adb8"
+hash = "16833ab727fed4e7b195ab4ffe293b3b1263d3d384bef2340cc047bf38dfd926"
 metafile = true
 
 [[files]]
@@ -214,7 +224,7 @@ hash = "9bdc5c88cf9d684eb73c27de55bdc7c9940126e7b6a7e2c7e53554209d15147f"
 
 [[files]]
 file = "resourcepacks/OptiArk Resources/pack.mcmeta"
-hash = "42c0c3db72f7303b589ff4dfdbc0e4ef59439b0bcf512afe6c9358e75bb400b1"
+hash = "ebef67f85f734a9681d915ef4e98a314050f2c1d2d85cc72660c88c9362efb79"
 
 [[files]]
 file = "resourcepacks/OptiArk Resources/pack.png"

@@ -2,10 +2,7 @@
 The new repo for building OptiArk packs, all old versions that are not 1.21.11 are now depricated and will NOT be updated unless some surious issue pops up with the packs.
 
 # 26.1.2 Unsupported Mods:
-- Ferrite Core
-- Krypton
 - MainMenuCredits
-- Not enough Vulkan (Vulkanmod only)
 
 # Extra Notes:
 If you feel like a version should be supported for this pack, then use the update.sh command to make your own version of the pack, its super simple and usualy works very well, its reccomended the lowest you go is 1.21.4 for the version. The script also tells you what incompatible mods there are too.
@@ -47,5 +44,4 @@ If you feel like a version should be supported for this pack, then use the updat
 - Very Many Players
 - WI Zoom
 - YACL (Yet Another Config Lib)
-- Apple Skin (coming later)
 ### Huge thanks to all of the creators of these mods for making this pack possible.
