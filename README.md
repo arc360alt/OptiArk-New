@@ -1,8 +1,17 @@
 # OptiArk New
 The new repo for building OptiArk packs, all old versions that are not 1.21.11 are now depricated and will NOT be updated unless some surious issue pops up with the packs.
 
-# 26.1 Notes:
-I will be updating the pack as soon as some other mods like Vulkanmod get support, if that takes too long I will update the pack anyway.
+# Nvidium and Vulkanmod notes
+The current maintiner of Nvidium says that they are going to try to get an OpenGL implementation of the mod working for 26.2, but also said that wouldnt come out for a while, vulkanmod on the otherhand has no current plans for 26.2 support as what i have seen as 26.2 implements its own Vulkan API. So those 2 packs will most likley stay un-updated for a while.
+
+# 26.2 Unsupported Mods:
+- Chunky
+- Collective
+- Ferrite Core
+- Krypton
+- Ore Harvester
+- Tree Harvester
+- Placeholder API
 
 # Extra Notes:
 If you feel like a version should be supported for this pack, then use the update.sh command to make your own version of the pack, its super simple and usualy works very well, its reccomended the lowest you go is 1.21.4 for the version. The script also tells you what incompatible mods there are too.
