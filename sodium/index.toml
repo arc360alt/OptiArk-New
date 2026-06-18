@@ -66,11 +66,6 @@ hash = "eaa52d6ff1bcb539956d50626085d9185eca346fabcf6b3c176c53192b9958ec"
 metafile = true
 
 [[files]]
-file = "mods-disabled/collective.pw.toml"
-hash = "c2a61b492dd0d7a156e15b7572adb40552b94c09658cc3c6d7faf99288d094c7"
-metafile = true
-
-[[files]]
 file = "mods-disabled/ferrite-core.pw.toml"
 hash = "816b735b2ad505476201800a99f527e61b392b712b9d20ca9edcce05f412fe87"
 metafile = true
@@ -78,21 +73,6 @@ metafile = true
 [[files]]
 file = "mods-disabled/krypton.pw.toml"
 hash = "8f6e0157b42ba668c0ba9aa7eff94b3b91a8f58bcd357e574d70a7b160d4337c"
-metafile = true
-
-[[files]]
-file = "mods-disabled/ore-harvester.pw.toml"
-hash = "b13be55b8550c635f36740dc65a751e6e1154de25319470e70cc2fbf18fd5ff9"
-metafile = true
-
-[[files]]
-file = "mods-disabled/placeholder-api.pw.toml"
-hash = "ab6def9d98d3f5bf12f78845bdb770a19d5ca590c571e60184e537ffa14dcbee"
-metafile = true
-
-[[files]]
-file = "mods-disabled/tree-harvester.pw.toml"
-hash = "5e87caea13a44193abf997de56cf3cab2eb9feb1d8be35e0203f06df3552b9c5"
 metafile = true
 
 [[files]]
@@ -108,6 +88,11 @@ metafile = true
 [[files]]
 file = "mods/clumps.pw.toml"
 hash = "3e4d788583a36e9d145407fadce148f037e5229bff430f7dcd281d4d426c9ee6"
+metafile = true
+
+[[files]]
+file = "mods/collective.pw.toml"
+hash = "a8b7b670568a93d900dcd412a47fa9495c437a6c19fe5f82e55540beb2389e8e"
 metafile = true
 
 [[files]]
@@ -146,6 +131,16 @@ hash = "5d5837e22eb02061c7f8f087b4d839a269d2e39a5149e4079bd0cf594724abfd"
 metafile = true
 
 [[files]]
+file = "mods/ore-harvester.pw.toml"
+hash = "0190c2b7ad68020d74a3304fc0f1e75715e5be4aa8fd5fe17bfa392246deef14"
+metafile = true
+
+[[files]]
+file = "mods/placeholder-api.pw.toml"
+hash = "b234ade7fd54bb9d99c27769cd1635b18835752676d0cdd0a29af2b4146251a8"
+metafile = true
+
+[[files]]
 file = "mods/sodium-extra.pw.toml"
 hash = "e49481f8cec67aa4643ab47878f449e58f9442e049df3a290f7b215d73d1c022"
 metafile = true
@@ -153,6 +148,11 @@ metafile = true
 [[files]]
 file = "mods/sodium.pw.toml"
 hash = "61b0b90fdcece885bca2ca639e5ddf696b374d51a93e3ee3deb8ecd07d57b9b0"
+metafile = true
+
+[[files]]
+file = "mods/tree-harvester.pw.toml"
+hash = "1477c5f03e64679f3c99456a4bb0af33f708f481747ccf2b8d9bcadbace1d9ce"
 metafile = true
 
 [[files]]
