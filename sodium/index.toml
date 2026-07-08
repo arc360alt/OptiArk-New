@@ -61,13 +61,8 @@ file = "icon.png"
 hash = "b2eeba11d5ff5d6c32bc8d6e1eb6f3268e6e08e1240122d1c7dd918ed71f7f6f"
 
 [[files]]
-file = "mods-disabled/chunky.pw.toml"
-hash = "eaa52d6ff1bcb539956d50626085d9185eca346fabcf6b3c176c53192b9958ec"
-metafile = true
-
-[[files]]
-file = "mods-disabled/ferrite-core.pw.toml"
-hash = "816b735b2ad505476201800a99f527e61b392b712b9d20ca9edcce05f412fe87"
+file = "mods-disabled/iris.pw.toml"
+hash = "8b4bb7969f100288a1bf2d0886dff2b62da878042a757b7caccf209e27fe36b9"
 metafile = true
 
 [[files]]
@@ -83,6 +78,11 @@ metafile = true
 [[files]]
 file = "mods/c2me-fabric.pw.toml"
 hash = "b6b5cb7c9403a6c4a925e683fb2468b3f50756cecd5fc7f82491c080ed8bab08"
+metafile = true
+
+[[files]]
+file = "mods/chunky.pw.toml"
+hash = "8e4512056e448a6f3d1ac179961eb699c15fbe000284e0aee041b5971b417302"
 metafile = true
 
 [[files]]
@@ -106,8 +106,8 @@ hash = "9d37d326d9557fdd25c97d72ac1bbd1e74c524aa5dca437a91d0de645dff6545"
 metafile = true
 
 [[files]]
-file = "mods/iris.pw.toml"
-hash = "8b4bb7969f100288a1bf2d0886dff2b62da878042a757b7caccf209e27fe36b9"
+file = "mods/ferrite-core.pw.toml"
+hash = "069d81cab53c0141459ad4d70bcf3e10f17652f24cc62d3b4a0fc2cd2b700871"
 metafile = true
 
 [[files]]
@@ -141,13 +141,18 @@ hash = "b234ade7fd54bb9d99c27769cd1635b18835752676d0cdd0a29af2b4146251a8"
 metafile = true
 
 [[files]]
+file = "mods/reeses-sodium-options.pw.toml"
+hash = "3e203bfd412cb6c7c9eccbb621edc24427174afbbe739bff98cf1b51f0636333"
+metafile = true
+
+[[files]]
 file = "mods/sodium-extra.pw.toml"
-hash = "e49481f8cec67aa4643ab47878f449e58f9442e049df3a290f7b215d73d1c022"
+hash = "f59459557165e5ed9022cd5e9182bd3b12ae495e9c300bf9025d03a76eca9fe1"
 metafile = true
 
 [[files]]
 file = "mods/sodium.pw.toml"
-hash = "61b0b90fdcece885bca2ca639e5ddf696b374d51a93e3ee3deb8ecd07d57b9b0"
+hash = "9c0841e3426cc58863e4c883f191329334940827d87615fd7c7484547861d867"
 metafile = true
 
 [[files]]
