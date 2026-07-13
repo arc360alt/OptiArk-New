@@ -5,7 +5,6 @@ The new repo for building OptiArk packs, all old versions that are not 1.21.11 a
 The current maintiner of Nvidium says that they are going to try to get an OpenGL implementation of the mod working for 26.2, but also said that wouldnt come out for a while, vulkanmod on the otherhand has no current plans for 26.2 support as what i have seen as 26.2 implements its own Vulkan API. So those 2 packs will most likley stay un-updated for a while.
 
 # 26.2 Unsupported/Disabled Mods:
-- Iris (Disabled becuase of incompatibility with the newest Sodium version)
 - Krypton
 
 # Extra Notes:
