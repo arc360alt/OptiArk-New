@@ -88,10 +88,10 @@ jobs:
             cd "$PACK_DIR"
             packwiz refresh
             packwiz modrinth export \
-              -o "../../releases/OptiArk-${RENDERER}-${VERSION}-MC${MC_VERSION}.mrpack"
+              -o "../../releases/NeoCraft-${RENDERER}-${VERSION}-MC${MC_VERSION}.mrpack"
             cd ../..
 
-            echo "    Built: OptiArk-${RENDERER}-${VERSION}-MC${MC_VERSION}.mrpack"
+            echo "    Built: NeoCraft-${RENDERER}-${VERSION}-MC${MC_VERSION}.mrpack"
           done
 
           echo ""
@@ -106,7 +106,7 @@ jobs:
           TAG="${{ github.event.inputs.release_tag }}"
           DATE=$(date +"%Y-%m-%d")
 
-          echo "## OptiArk — ${RENDERER^} Bundle ${TAG}" > releases/RELEASE_NOTES.md
+          echo "## NeoCraft — ${RENDERER^} Bundle ${TAG}" > releases/RELEASE_NOTES.md
           echo "_Released: ${DATE}_" >> releases/RELEASE_NOTES.md
           echo "" >> releases/RELEASE_NOTES.md
           echo "### Included Versions" >> releases/RELEASE_NOTES.md
@@ -130,7 +130,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.event.inputs.release_tag }}
-          name: "OptiArk ${{ github.event.inputs.renderer }} — ${{ github.event.inputs.release_tag }}"
+          name: "NeoCraft ${{ github.event.inputs.renderer }} — ${{ github.event.inputs.release_tag }}"
           body_path: releases/RELEASE_NOTES.md
           files: releases/*.mrpack
           draft: ${{ github.event.inputs.draft }}

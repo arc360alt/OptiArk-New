@@ -65,10 +65,10 @@ jobs:
 
             cd "$PACK_DIR"
             packwiz refresh
-            packwiz modrinth export -o "../releases/OptiArk-${PACK_NAME}-${MC_VERSION}.mrpack"
+            packwiz modrinth export -o "../releases/NeoCraft-${PACK_NAME}-${MC_VERSION}.mrpack"
             cd ..
 
-            echo "    Built: OptiArk-${PACK_NAME}-${MC_VERSION}.mrpack"
+            echo "    Built: NeoCraft-${PACK_NAME}-${MC_VERSION}.mrpack"
           done
 
           echo ""
