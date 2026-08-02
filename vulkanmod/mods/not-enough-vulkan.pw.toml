@@ -1,13 +1,13 @@
 name = "Not Enough Vulkan"
-filename = "not-enough-vulkan-1.3.0.jar"
+filename = "not-enough-vulkan-fabric-1.6.2+mc26.1.1.jar"
 side = "client"
 
 [download]
-url = "https://cdn.modrinth.com/data/iuZL1bXB/versions/Kbzxk0LQ/not-enough-vulkan-1.3.0.jar"
+url = "https://cdn.modrinth.com/data/iuZL1bXB/versions/5uimowd4/not-enough-vulkan-fabric-1.6.2%2Bmc26.1.1.jar"
 hash-format = "sha512"
-hash = "713cd76cbb56c1e2e518a467b5b31834ddef1bc07cf378aef345fbd6b3ea08712751e5b38604f3e6e203c7bbf4422210c31dbc4a772025bc5de247a2fabc3cde"
+hash = "858aea693dc5720942d67aaca9616886e5362fe825145eb0ee3c7c311d9c0a6919fa3fa38aae6bab0fd9019b4069adea1a912a5fcf1f26984bf1f98b759a98c9"
 
 [update]
 [update.modrinth]
 mod-id = "iuZL1bXB"
-version = "Kbzxk0LQ"
+version = "5uimowd4"

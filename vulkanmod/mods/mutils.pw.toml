@@ -1,13 +1,9 @@
 name = "Modpack Utils"
-filename = "ModpackUtils-1.2.0+fabric.1.21.5.jar"
+filename = "ModpackUtils-1.2.0+fabric.26.1.2.jar"
 side = "both"
 
 [download]
-url = "https://cdn.modrinth.com/data/wklFEiuR/versions/9I05imCM/ModpackUtils-1.2.0%2Bfabric.1.21.5.jar"
-hash-format = "sha512"
-hash = "1f0f95363e48925ab6b2f4e1c01e95d70329575a1a139491c5a9758e25d96c02811599d4ad3d1e70cd49b42ef45002781bb25175b854f3e91ddf1d93a0e04063"
+url = "https://github.com/arc360alt/ModpackUtils-Update/releases/download/v1.2.0/ModpackUtils-1.2.0+fabric.26.1.2.jar"
+hash-format = "sha256"
+hash = "ab98966e13271d3aea1b583e14f8af38bea658e1ed11cfcd46693cc6bcd7238a"
 
-[update]
-[update.modrinth]
-mod-id = "wklFEiuR"
-version = "9I05imCM"
