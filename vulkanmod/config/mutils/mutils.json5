@@ -7,7 +7,7 @@
 	modpackName: "NeoCraft",
 	modpackId: "neocraft",
 	modpackHome: "https://neocraft.arc360hub.com",
-	localVersion: "Version 1.3.0",
+	localVersion: "Version 1.4.0",
 	checkMcVersion: false,
 	loader: "fabric",
 	versionAPI: "https://arc360hub.com/OptiArk/optiarkapi/pack.txt",
