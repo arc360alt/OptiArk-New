@@ -5,4 +5,4 @@ side = "both"
 [download]
 url = "https://github.com/arc360alt/ModpackUtils-Update/releases/download/v1.2.0/ModpackUtils-1.2.0+fabric.26.3.jar"
 hash-format = "sha256"
-hash = "dafc687d81956cbab582689bbdc6fded1ca85f79b65a650e47f51dc1292493b8"
+hash = "329b7a3aa1ae609704a1bc4bb0bca173fff7f6eb17d2a16d420e6ce41b2a2df9"
