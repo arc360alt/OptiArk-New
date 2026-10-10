@@ -1,10 +1,13 @@
 name = "Nvidium"
-filename = "nvidium-0.4.3-beta5-1.21.11.jar"
+filename = "nvidium-0.4.4-beta7-26.3.jar"
 side = "client"
 
 [download]
-url = "https://github.com/drouarb/nvidium/releases/download/0.4.3-beta5/nvidium-0.4.3-beta5-1.21.11.jar"
-hash-format = "sha256"
-hash = "994c586a77c0e2fd5f13835e2861dd47894ab6953d1de112f166694fbe3f81d6"
+url = "https://cdn.modrinth.com/data/SfMw2IZN/versions/8mVK1zbk/nvidium-0.4.4-beta7-26.3.jar"
+hash-format = "sha512"
+hash = "36cfe2f0efdbcbf44e7a5367441eb0655257561f929434b1aa821ba0442fa845232cae7320e7dadd26f2962150b8a42c16e4fd1dd3d94d6a4bd0bfb46fdff6d1"
 
-
+[update]
+[update.modrinth]
+mod-id = "SfMw2IZN"
+version = "8mVK1zbk"
